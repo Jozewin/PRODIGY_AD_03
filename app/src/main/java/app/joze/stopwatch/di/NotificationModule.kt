@@ -2,6 +2,7 @@ package app.joze.stopwatch.di
 
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 
 import androidx.core.app.NotificationCompat
 import app.joze.stopwatch.service.ServiceHelper
@@ -22,6 +23,7 @@ object NotificationModule {
     @ServiceScoped
     @Provides
     fun provideNotificationBuilder(@ApplicationContext context : Context) : NotificationCompat.Builder{
+        Log.d("MainActivity","Notification builder created")
         return NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Stopwatch")
             .setContentText("00:00:00")

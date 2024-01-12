@@ -1,8 +1,6 @@
 package app.joze.stopwatch
 
-import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.joze.stopwatch.service.ServiceHelper
@@ -36,6 +33,7 @@ import app.joze.stopwatch.service.StopwatchService
 import app.joze.stopwatch.service.StopwatchState
 import app.joze.stopwatch.util.Constants
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StopwatchScreen(
     stopwatchService: StopwatchService
@@ -84,9 +82,9 @@ fun StopwatchScreen(
                         modifier = Modifier
                             .background(
                                 color = Color(0xFFA8A8A8),
-                                shape = RoundedCornerShape(26.dp)
+                                shape = RoundedCornerShape(8.dp)
                             )
-                            .padding(16.dp),
+                            .padding(8.dp),
 
                         ) {
 
@@ -134,14 +132,11 @@ fun StopwatchScreen(
                     ) {
                         Button(
                             onClick = {
-                                Log.d("MainActivity", "hi this is $currentState")
-
                                 ServiceHelper.triggerForegroundService(
                                     context = context,
                                     action = if (currentState == StopwatchState.Started) Constants.ACTION_SERVICE_PAUSE
                                     else Constants.ACTION_SERVICE_START
                                 )
-                                Log.d("MainActivity", "hi this is $currentState")
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = if (currentState == StopwatchState.Started) Color.Red
@@ -150,12 +145,11 @@ fun StopwatchScreen(
 
                         ) {
                             Text(
-                                text = if (currentState == StopwatchState.Started) "Pause"
-                                else if (currentState == StopwatchState.Paused) "Resume"
-                                else "Start",
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Light,
-                                color = Color.White
+                                text = when (currentState) {
+                                    StopwatchState.Started -> "Pause"
+                                    StopwatchState.Paused -> "Resume"
+                                    else -> "Start"
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.width(30.dp))
@@ -166,17 +160,14 @@ fun StopwatchScreen(
                                     action = Constants.ACTION_SERVICE_STOP
                                 )
                             },
-                            enabled = seconds != "00" && currentState != StopwatchState.Started,
+                            enabled = seconds != "00" ,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF2A2929),
                                 disabledContainerColor = Color(0x63040000)
                             )
                         ) {
                             Text(
-                                text = "Stop",
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Light,
-                                color = Color.White
+                                text = "Stop"
                             )
                         }
                     }
@@ -191,17 +182,3 @@ fun StopwatchScreen(
 }
 
 
-@ExperimentalAnimationApi
-fun addAnimation(duration: Int = 600): ContentTransform {
-    return slideInVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeIn(
-        animationSpec = tween(durationMillis = duration)
-    ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeOut(
-        animationSpec = tween(durationMillis = duration)
-    )
-}
-
-@Preview(backgroundColor = 0xFF333333)
-@Composable
-fun asdas() {
-    StopwatchScreen(stopwatchService = StopwatchService())
-}

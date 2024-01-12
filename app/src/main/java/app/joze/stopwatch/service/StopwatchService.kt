@@ -7,7 +7,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.mutableStateOf
@@ -103,24 +102,18 @@ class StopwatchService : Service() {
     //_____________________________________________________________________
 
     private fun startStopwatch(onTick: (h: String, m: String, s: String) -> Unit) {
-        Log.d("MainActivity", "hi this is $currentState")
         currentState.value = StopwatchState.Started
         timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
             duration = duration.plus(1.seconds)
             updateTimeUnits()
             onTick(hours.value, minutes.value, seconds.value)
         }
-        Log.d("MainActivity", "hi this is ${currentState.value}")
-
     }
 
     private fun pauseStopwatch() {
-        Log.d("MainActivity", "hi stop is $currentState")
-
         if (this::timer.isInitialized) {
             timer.cancel()
         }
-
         currentState.value = StopwatchState.Paused
     }
 

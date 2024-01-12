@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,6 +20,7 @@ import app.joze.stopwatch.ui.theme.StopwatchTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
 
     private var isBound by mutableStateOf(false)
@@ -49,7 +51,7 @@ class MainActivity : ComponentActivity() {
             StopwatchTheme {
                 // A surface container using the 'background' color from the theme
                 if (isBound) {
-                    StopwatchScreen(stopwatchService = StopwatchService())
+                    StopwatchScreen(stopwatchService = stopwatchService)
                 }
             }
 
